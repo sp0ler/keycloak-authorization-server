@@ -1,0 +1,29 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: client-server
+  cloud:
+    gateway:
+      routes:
+        - id: resources
+          uri: http://localhost:8081/messages
+          predicates:
+            Path=/messages/**
+          filters:
+            TokenRelay=
+  security:
+    oauth2:
+      client:
+        registration:
+          gateway:
+            provider: my-provider
+            client-id: my_client
+            client-secret: NR4XgCcB4iSqjhSV5KX5oKi1Mo0UHI3H
+            authorization-grant-type: authorization_code
+            redirect-uri: "http://localhost:8082/login/oauth2/code/{registrationId}"
+            scope: openid, message.read
+        provider:
+          my-provider:
+            issuer-uri: http://localhost:8080/auth/realms/my_realm
